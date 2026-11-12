@@ -1,0 +1,6 @@
+{
+  "name": "BookMyErtiga Jamshedpur",
+  "description": "Self-drive Maruti Suzuki Ertiga rental marketplace in Jamshedpur, Jharkhand",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

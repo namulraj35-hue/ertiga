@@ -1,0 +1,122 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper Functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'namulraj35@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    // Marketplace Global Settings (Publicly viewable)
+    match /settings/marketplace {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Jamshedpur Pickup Zones (Publicly viewable)
+    match /service_areas/{areaId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Admins Registry
+    match /admins/{adminId} {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // User Profiles
+    match /users/{userId} {
+      allow get: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() && request.auth.uid == userId && (
+        !('isAdmin' in incoming()) || incoming().isAdmin == false || isAdmin()
+      );
+      allow update: if isSignedIn() && (
+        (request.auth.uid == userId && (!('isAdmin' in incoming()) || incoming().isAdmin == existing().isAdmin || isAdmin())) ||
+        isAdmin()
+      );
+      allow delete: if isAdmin();
+    }
+
+    // Vehicle Listings (Approved listings publicly viewable)
+    match /vehicles/{vehicleId} {
+      allow get: if resource.data.status == 'APPROVED' || (
+        isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin())
+      );
+      allow list: if resource.data.status == 'APPROVED' || (
+        isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin())
+      );
+      allow create: if isSignedIn() &&
+                       incoming().ownerId == request.auth.uid &&
+                       incoming().make == 'Maruti Suzuki' &&
+                       incoming().model == 'Ertiga' &&
+                       incoming().status == 'PENDING_REVIEW';
+      allow update: if isSignedIn() && (
+        // Owner updates own vehicle
+        (existing().ownerId == request.auth.uid && incoming().ownerId == existing().ownerId) ||
+        // Admin updates vehicle approval/notes
+        isAdmin()
+      );
+      allow delete: if isSignedIn() && (existing().ownerId == request.auth.uid || isAdmin());
+    }
+
+    // Bookings & Holds
+    match /bookings/{bookingId} {
+      allow get: if isSignedIn() && (
+        resource.data.renterId == request.auth.uid ||
+        resource.data.ownerId == request.auth.uid ||
+        isAdmin()
+      );
+      allow list: if isSignedIn() && (
+        resource.data.renterId == request.auth.uid ||
+        resource.data.ownerId == request.auth.uid ||
+        isAdmin()
+      );
+      allow create: if isSignedIn() &&
+                       incoming().renterId == request.auth.uid &&
+                       incoming().status == 'REQUESTED';
+      allow update: if isSignedIn() && (
+        // Renter updates (e.g., cancel before confirm, add payment ref)
+        (existing().renterId == request.auth.uid && incoming().renterId == existing().renterId) ||
+        // Owner updates (e.g., accept/decline, complete handover)
+        (existing().ownerId == request.auth.uid && incoming().ownerId == existing().ownerId) ||
+        // Admin updates (verify payment, resolve disputes)
+        isAdmin()
+      );
+      allow delete: if isAdmin();
+    }
+
+    // Owner Earnings / Payouts
+    match /payouts/{payoutId} {
+      allow get: if isSignedIn() && (
+        resource.data.ownerId == request.auth.uid ||
+        isAdmin()
+      );
+      allow list: if isSignedIn() && (
+        resource.data.ownerId == request.auth.uid ||
+        isAdmin()
+      );
+      allow create, update, delete: if isAdmin();
+    }
+  }
+}

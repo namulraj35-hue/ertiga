@@ -1,0 +1,180 @@
+{
+  "entities": {
+    "MarketplaceSettings": {
+      "title": "MarketplaceSettings",
+      "description": "Global settings for BookMyErtiga Jamshedpur",
+      "type": "object",
+      "properties": {
+        "appName": { "type": "string" },
+        "serviceCity": { "type": "string" },
+        "currency": { "type": "string" },
+        "timezone": { "type": "string" },
+        "platformFeePercent": { "type": "number" },
+        "minRentalDays": { "type": "integer" },
+        "maxRentalDays": { "type": "integer" },
+        "allowOutstation": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["appName", "serviceCity", "currency", "timezone", "platformFeePercent", "minRentalDays", "maxRentalDays"]
+    },
+    "ServiceArea": {
+      "title": "ServiceArea",
+      "description": "Pickup zone within Jamshedpur, Jharkhand",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "isActive": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "isActive"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with roles and contact details",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "isRenter": { "type": "boolean" },
+        "isOwner": { "type": "boolean" },
+        "isAdmin": { "type": "boolean" },
+        "renterVerified": { "type": "boolean" },
+        "ownerVerified": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "displayName", "email", "isRenter", "isOwner"]
+    },
+    "Vehicle": {
+      "title": "Vehicle",
+      "description": "Ertiga vehicle listed by an owner with owner-set rates",
+      "type": "object",
+      "properties": {
+        "ownerId": { "type": "string" },
+        "ownerName": { "type": "string" },
+        "make": { "type": "string" },
+        "model": { "type": "string" },
+        "variant": { "type": "string" },
+        "registrationNumber": { "type": "string" },
+        "registrationYear": { "type": "integer" },
+        "calculatedAge": { "type": "integer" },
+        "ageLabel": { "type": "string" },
+        "seatingCapacity": { "type": "integer" },
+        "transmission": { "type": "string" },
+        "fuelType": { "type": "string" },
+        "fuelPolicy": { "type": "string" },
+        "dailyRate": { "type": "number" },
+        "minDays": { "type": "integer" },
+        "maxDays": { "type": "integer" },
+        "includedKmPerDay": { "type": "integer" },
+        "extraKmCharge": { "type": "number" },
+        "deliveryCharge": { "type": "number" },
+        "securityDeposit": { "type": "number" },
+        "city": { "type": "string" },
+        "state": { "type": "string" },
+        "country": { "type": "string" },
+        "pickupArea": { "type": "string" },
+        "conditionNotes": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "status": { "type": "string" },
+        "rejectionReason": { "type": "string" },
+        "ownerRating": { "type": "number" },
+        "completedRentalsCount": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerId", "make", "model", "variant", "registrationYear", "dailyRate", "pickupArea", "city", "status"]
+    },
+    "Booking": {
+      "title": "Booking",
+      "description": "Booking request with atomic hold and immutable price snapshot",
+      "type": "object",
+      "properties": {
+        "vehicleId": { "type": "string" },
+        "renterId": { "type": "string" },
+        "renterName": { "type": "string" },
+        "renterPhone": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "vehicleMakeModel": { "type": "string" },
+        "vehicleVariant": { "type": "string" },
+        "pickupArea": { "type": "string" },
+        "startEpochMs": { "type": "integer" },
+        "endEpochMs": { "type": "integer" },
+        "daysCount": { "type": "integer" },
+        "status": { "type": "string" },
+        "holdExpiresAtEpochMs": { "type": "integer" },
+        "dailyRate": { "type": "number" },
+        "baseTotal": { "type": "number" },
+        "platformFee": { "type": "number" },
+        "deliveryFee": { "type": "number" },
+        "deposit": { "type": "number" },
+        "totalAmount": { "type": "number" },
+        "paymentStatus": { "type": "string" },
+        "paymentMode": { "type": "string" },
+        "paymentRef": { "type": "string" },
+        "handoverOtp": { "type": "string" },
+        "pickupOdometer": { "type": "integer" },
+        "pickupFuelPercent": { "type": "integer" },
+        "pickupNotes": { "type": "string" },
+        "pickupCompletedAtEpochMs": { "type": "integer" },
+        "returnOdometer": { "type": "integer" },
+        "returnFuelPercent": { "type": "integer" },
+        "returnNotes": { "type": "string" },
+        "returnCompletedAtEpochMs": { "type": "integer" },
+        "declineReason": { "type": "string" },
+        "cancellationReason": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["vehicleId", "renterId", "ownerId", "startEpochMs", "endEpochMs", "daysCount", "status", "dailyRate", "baseTotal", "totalAmount"]
+    },
+    "Payout": {
+      "title": "Payout",
+      "description": "Owner earnings ledger record",
+      "type": "object",
+      "properties": {
+        "ownerId": { "type": "string" },
+        "bookingId": { "type": "string" },
+        "vehicleId": { "type": "string" },
+        "grossRental": { "type": "number" },
+        "platformCommission": { "type": "number" },
+        "netEarnings": { "type": "number" },
+        "status": { "type": "string" },
+        "payoutDateEpochMs": { "type": "integer" },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerId", "bookingId", "grossRental", "netEarnings", "status"]
+    }
+  },
+  "firestore": {
+    "/settings/marketplace": {
+      "schema": { "$ref": "#/entities/MarketplaceSettings" },
+      "description": "Marketplace global configuration"
+    },
+    "/service_areas/{areaId}": {
+      "schema": { "$ref": "#/entities/ServiceArea" },
+      "description": "Configured pickup areas inside Jamshedpur"
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Registered user profile"
+    },
+    "/vehicles/{vehicleId}": {
+      "schema": { "$ref": "#/entities/Vehicle" },
+      "description": "Listed Maruti Suzuki Ertiga vehicles"
+    },
+    "/bookings/{bookingId}": {
+      "schema": { "$ref": "#/entities/Booking" },
+      "description": "Self-drive booking requests and trips"
+    },
+    "/payouts/{payoutId}": {
+      "schema": { "$ref": "#/entities/Payout" },
+      "description": "Owner earnings and payouts"
+    }
+  }
+}
